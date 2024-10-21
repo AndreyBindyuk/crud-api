@@ -9,6 +9,11 @@ app.use(express.json());
 
 const users: Record<string, any> = {};
 
+app.use((err: any, req: any, res: any, next: any) => {
+  console.error(err.stack);
+  res.status(500).send('500 Error');
+});
+
 app.get('/api/users', (req, res) => {
   res.status(200).json(Object.values(users));
 });
@@ -67,6 +72,10 @@ app.delete('api/user/:userId', (req, res) => {
   }
   delete users[userId];
   res.status(204).send();
+});
+
+app.use((_, res) => {
+  res.status(404).send('404 Not Found');
 });
 
 const PORT = process.env.PORT || 3000;
